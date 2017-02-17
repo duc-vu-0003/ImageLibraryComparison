@@ -16,7 +16,7 @@ node {
 
   stage 'Stage Archive'
   //tell Jenkins to archive the apks
-  archiveArtifacts artifacts: 'prcm/build/outputs/apk/*.apk', fingerprint: true
+  archiveArtifacts artifacts: 'app/build/outputs/apk/*.apk', fingerprint: true
 
   env.GIT_CHANGELOG = getChangelog()
   def releaseNotes = "${env.GIT_BRANCH}\n\n${env.GIT_CHANGELOG}"
@@ -24,8 +24,8 @@ node {
 
   echo "Release Notes: ${env.ORG_GRADLE_PROJECT_BETA_RELEASE_NOTES}"
 
-  stage 'Stage Upload To Fabric' 
-  sh "./gradlew crashlyticsUploadDistributionDebug -PBUILD_NUMBER=${env.BUILD_NUMBER}"
+  //stage 'Stage Upload To Fabric' 
+  //sh "./gradlew crashlyticsUploadDistributionDebug -PBUILD_NUMBER=${env.BUILD_NUMBER}"
 
 }
 
