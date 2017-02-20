@@ -12,6 +12,15 @@ pipeline {
             }
         }
 
+        stage("Stage Changelog") {
+            steps {
+                 env.GIT_CHANGELOG = getChangelog()
+                 def releaseNotes = "${env.GIT_BRANCH}\n\n${env.GIT_CHANGELOG}"
+                 env.ORG_GRADLE_PROJECT_BETA_RELEASE_NOTES=releaseNotes
+                 echo "Release Notes: ${env.ORG_GRADLE_PROJECT_BETA_RELEASE_NOTES}"
+            }
+        }
+
         stage('Stage Build') {
             steps {
                 //branch name from Jenkins environment variables
@@ -30,11 +39,6 @@ pipeline {
 
         stage('Stage Upload To Fabric') {
             steps {
-                 env.GIT_CHANGELOG = getChangelog()
-                 def releaseNotes = "${env.GIT_BRANCH}\n\n${env.GIT_CHANGELOG}"
-                 env.ORG_GRADLE_PROJECT_BETA_RELEASE_NOTES=releaseNotes
-
-                 echo "Release Notes: ${env.ORG_GRADLE_PROJECT_BETA_RELEASE_NOTES}"
                  sh "./gradlew crashlyticsUploadDistributionDebug -PBUILD_NUMBER=${env.BUILD_NUMBER}"
             }
         }
