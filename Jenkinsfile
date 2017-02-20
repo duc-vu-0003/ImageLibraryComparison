@@ -16,8 +16,7 @@ pipeline {
             steps {
                  env.GIT_CHANGELOG = getChangelog()
                  def releaseNotes = "${env.GIT_BRANCH}\n\n${env.GIT_CHANGELOG}"
-                 env.ORG_GRADLE_PROJECT_BETA_RELEASE_NOTES=releaseNotes
-                 echo "Release Notes: ${env.ORG_GRADLE_PROJECT_BETA_RELEASE_NOTES}"
+                 echo "Release Notes: ${releaseNotes}"
             }
         }
 
@@ -39,6 +38,7 @@ pipeline {
 
         stage('Stage Upload To Fabric') {
             steps {
+                 env.ORG_GRADLE_PROJECT_BETA_RELEASE_NOTES=releaseNotes
                  sh "./gradlew crashlyticsUploadDistributionDebug -PBUILD_NUMBER=${env.BUILD_NUMBER}"
             }
         }
