@@ -41,9 +41,9 @@ pipeline {
             }
         }
 
-        stage('Stage Test') {
+        stage('Stage Instrumented Test') {
             steps {
-                echo "Test"
+                echo "Instrumented Test"
                 //sh "./gradlew connectedAndroidTest"
             }
         }
