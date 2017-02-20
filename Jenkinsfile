@@ -88,8 +88,6 @@ def sendNotifications(String buildStatus = 'STARTED') {
   // Send notifications
   slackSend (color: colorCode, message: summary)
 
-  hipchatSend (color: color, notify: true, message: summary)
-
   emailext (
       to: 'ducva2410@gmail.com',
       subject: subject,
