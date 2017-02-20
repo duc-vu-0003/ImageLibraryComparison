@@ -29,6 +29,18 @@ pipeline {
             }
         }
 
+        stage('Stage Lint') {
+            steps {
+                sh "./gradlew test"
+            }
+        }
+
+        stage('Stage Test') {
+            steps {
+                sh "./gradlew connectedAndroidTest"
+            }
+        }
+
         stage('Stage Archive') {
             steps {
                 archiveArtifacts artifacts: 'app/build/outputs/apk/*.apk', fingerprint: true
