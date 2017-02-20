@@ -18,14 +18,14 @@ pipeline {
                 sh 'git submodule update --init'
 
                 sh 'git rev-parse --verify HEAD > jenkins_pipeline_output.temp'
-                def commitHash = readFile('jenkins_pipeline_output.temp').split("\r?\n")[0]
-                env.GIT_COMMIT = commitHash
+                //def commitHash = readFile('jenkins_pipeline_output.temp').split("\r?\n")[0]
+                //env.GIT_COMMIT = commitHash
             }
         }
 
         stage('Stage Lint') {
             steps {
-                checkLint
+                checkLint()
             }
         }
 
