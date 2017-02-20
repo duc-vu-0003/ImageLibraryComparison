@@ -12,14 +12,6 @@ pipeline {
             }
         }
 
-        stage("Stage Changelog") {
-            steps {
-                gitCommit = sh(returnStdout: true, script: 'git rev-parse HEAD').trim()
-                //def releaseNotes = "${env.GIT_BRANCH}\n\n${env.GIT_CHANGELOG}"
-                echo "Release Notes: ${gitCommit}"
-            }
-        }
-
         stage('Stage Build') {
             steps {
                 //branch name from Jenkins environment variables
@@ -38,7 +30,6 @@ pipeline {
 
         stage('Stage Upload To Fabric') {
             steps {
-                //env.ORG_GRADLE_PROJECT_BETA_RELEASE_NOTES=releaseNotes
                 sh "./gradlew crashlyticsUploadDistributionDebug -PBUILD_NUMBER=${env.BUILD_NUMBER}"
             }
         }
