@@ -16,7 +16,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import con.ducva.imageloadercompare.Constant;
-import con.ducva.imageloadercompare.Utils;
+import con.ducva.imageloadercompare.utils.Utils;
 import con.ducva.imageloadercompare.adapter.holder.BaseViewHolder;
 import con.ducva.imageloadercompare.adapter.holder.FrescoViewHolder;
 import con.ducva.imageloadercompare.adapter.holder.GlideViewHolder;

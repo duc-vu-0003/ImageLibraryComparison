@@ -34,7 +34,7 @@ android {
         debug {
             applicationIdSuffix ".debug"
             versionNameSuffix " Debug"
-            ext.betaDistributionReleaseNotes="Release Notes for this build."
+            ext.betaDistributionReleaseNotes="Fix crash when don't have permission"
             ext.betaDistributionEmails="ducva@gmo-media.jp, ducva2410@gmail.com"
         }
     }
