@@ -16,6 +16,16 @@ pipeline {
             steps {
                 checkout scm
                 sh 'git submodule update --init'
+
+                sh 'git rev-parse --verify HEAD > jenkins_pipeline_output.temp'
+                def commitHash = readFile('jenkins_pipeline_output.temp').split("\r?\n")[0]
+                env.GIT_COMMIT = commitHash
+            }
+        }
+
+        stage('Stage Lint') {
+            steps {
+                checkLint
             }
         }
 
@@ -31,21 +41,7 @@ pipeline {
 
         stage('Stage Unit Test') {
             steps {
-                sh "./gradlew test"
-                publishHTML (target: [
-                      allowMissing: false,
-                      alwaysLinkToLastBuild: false,
-                      keepAll: true,
-                      reportDir: 'app/build/outputs/',
-                      reportFiles: 'app/build/reports/tests/*/*.html',
-                      reportName: "Android Unit Test Report"
-                    ])
-            }
-        }
-
-        stage('Stage Test') {
-            steps {
-                sh "./gradlew connectedAndroidTest"
+                runTestAndArchiveResult(':app:test', 'app/build/test-results', '*/TEST-*.xml')
             }
         }
 
@@ -114,4 +110,50 @@ def sendNotifications(String buildStatus = 'STARTED') {
       body: details,
       recipientProviders: [[$class: 'DevelopersRecipientProvider']]
     )
+}
+
+void checkLint() {
+    def pfs = ['']
+    def bts = ['release', 'debug']
+    List<String> variants = []
+    pfs.each { pf -> bts.each{ bt -> variants.add(pf + (pf.isEmpty() ? bt : bt.capitalize())) } }
+
+    // List#collect メソッドを使いたいが、groovy-cps ライブラリのバグで Pipeline 上でうまく動かない。
+    // See : https://issues.jenkins-ci.org/browse/JENKINS-26481
+    List<GString> gradleTasks = []
+    List<GString> outputFiles = []
+    variants.each {
+        gradleTasks.add(":app:lint${it.capitalize()}")
+        outputFiles.add("lint-results-${it}.html")
+    }
+
+    // テスト失敗時にも結果を保存するように try-catch する。
+    Throwable error = null
+    try { sh "./gradlew --stacktrace ${gradleTasks.join(' ')}" } catch (e) { error = e }
+    try {
+       publishHTML([
+                            target: [
+                                    reportName: 'Android Lint Report',
+                                    reportDir: 'app/build/outputs/',
+                                    reportFiles: outputFiles.join(','),
+                            ],
+                            // Lint でエラーが発生した場合はリポートファイルがないことを許容する。
+                            allowMissing: error != null,
+                            alwaysLinkToLastBuild: true,
+                            keepAll: true,
+                    ])
+       } catch (e) { if (error == null) error = e }
+       if (error != null) throw error
+}
+
+void runTestAndArchiveResult(String gradleTestTask, String resultsDir, String resultFilesPattern) {
+    sh "rm -rf ${resultsDir}"
+
+    // テスト失敗時にも結果を保存するように try-catch する。
+    Throwable error = null
+    try { sh "./gradlew --stacktrace ${gradleTestTask}" } catch (e) { error = e }
+    try {
+        step $class: 'JUnitResultArchiver', testResults: "${resultsDir}/${resultFilesPattern}"
+    } catch (e) { if (error == null) error = e }
+    if (error != null) throw error
 }
