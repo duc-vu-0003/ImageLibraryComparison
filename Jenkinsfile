@@ -25,13 +25,21 @@ pipeline {
                 echo "My branch is: ${env.BRANCH_NAME}"
 
                 //build your gradle flavor, passes the current build number as a parameter to gradle
-                sh "./gradlew clean assembleDebug -PBUILD_NUMBER=${env.BUILD_NUMBER}"
+                sh "./gradlew clean assemble -PBUILD_NUMBER=${env.BUILD_NUMBER}"
             }
         }
 
-        stage('Stage Lint') {
+        stage('Stage Unit Test') {
             steps {
                 sh "./gradlew test"
+                publishHTML (target: [
+                      allowMissing: false,
+                      alwaysLinkToLastBuild: false,
+                      keepAll: true,
+                      reportDir: 'app/build/outputs/',
+                      reportFiles: 'app/build/reports/tests/*/*.html',
+                      reportName: "Android Unit Test Report"
+                    ])
             }
         }
 
