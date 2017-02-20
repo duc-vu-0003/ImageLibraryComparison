@@ -14,7 +14,7 @@ pipeline {
 
         stage("Stage Changelog") {
             steps {
-                def gitCommit = sh(returnStdout: true, script: 'git rev-parse HEAD').trim()
+                gitCommit = sh(returnStdout: true, script: 'git rev-parse HEAD').trim()
                 //def releaseNotes = "${env.GIT_BRANCH}\n\n${env.GIT_CHANGELOG}"
                 echo "Release Notes: ${gitCommit}"
             }
