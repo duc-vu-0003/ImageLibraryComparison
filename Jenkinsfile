@@ -14,9 +14,9 @@ pipeline {
 
         stage("Stage Changelog") {
             steps {
-                env.GIT_CHANGELOG = getChangelog()
-                def releaseNotes = "${env.GIT_BRANCH}\n\n${env.GIT_CHANGELOG}"
-                echo "Release Notes: ${releaseNotes}"
+                def gitCommit = sh(returnStdout: true, script: 'git rev-parse HEAD').trim()
+                //def releaseNotes = "${env.GIT_BRANCH}\n\n${env.GIT_CHANGELOG}"
+                echo "Release Notes: ${gitCommit}"
             }
         }
 
@@ -38,7 +38,7 @@ pipeline {
 
         stage('Stage Upload To Fabric') {
             steps {
-                env.ORG_GRADLE_PROJECT_BETA_RELEASE_NOTES=releaseNotes
+                //env.ORG_GRADLE_PROJECT_BETA_RELEASE_NOTES=releaseNotes
                 sh "./gradlew crashlyticsUploadDistributionDebug -PBUILD_NUMBER=${env.BUILD_NUMBER}"
             }
         }
