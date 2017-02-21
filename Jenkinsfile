@@ -24,7 +24,12 @@ pipeline {
                 sh "./gradlew lint"
             }
         }
-
+        post {
+            success {
+                androidLint canComputeNew: false, defaultEncoding: '', healthy: '', pattern: '**/lint-results*.xml', unHealthy: ''
+            }
+        }
+        
         stage('Stage Build') {
             steps {
                 //branch name from Jenkins environment variables
@@ -38,6 +43,11 @@ pipeline {
         stage('Stage Unit Test') {
             steps {
                 sh "./gradlew test"
+            }
+        }
+        post {
+            success {
+                junit 'app/build/test-results/**/*.xml'
             }
         }
 
