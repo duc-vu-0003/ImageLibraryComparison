@@ -23,10 +23,10 @@ pipeline {
             steps {
                 sh "./gradlew lint"
             }
-        }
-        post {
-            success {
-                androidLint canComputeNew: false, defaultEncoding: '', healthy: '', pattern: '**/lint-results*.xml', unHealthy: ''
+            post {
+                success {
+                    androidLint canComputeNew: false, defaultEncoding: '', healthy: '', pattern: '**/lint-results*.xml', unHealthy: ''
+                }
             }
         }
         
@@ -44,13 +44,13 @@ pipeline {
             steps {
                 sh "./gradlew test"
             }
-        }
-        post {
-            success {
-                junit 'app/build/test-results/**/*.xml'
+            post {
+                success {
+                    junit 'app/build/test-results/**/*.xml'
+                }
             }
         }
-
+        
         stage('Stage Instrumented Test') {
             steps {
                 echo "Instrumented Test"
