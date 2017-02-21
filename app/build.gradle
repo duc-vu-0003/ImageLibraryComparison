@@ -1,4 +1,19 @@
+buildscript {
+    repositories {
+        maven { url 'https://maven.fabric.io/public' }
+    }
+
+    dependencies {
+        classpath 'io.fabric.tools:gradle:1.+'
+    }
+}
 apply plugin: 'com.android.application'
+apply plugin: 'io.fabric'
+
+repositories {
+    maven { url 'https://maven.fabric.io/public' }
+}
+
 
 android {
     compileSdkVersion 25
@@ -16,6 +31,12 @@ android {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
+        debug {
+            applicationIdSuffix ".debug"
+            versionNameSuffix " Debug"
+            ext.betaDistributionReleaseNotes="Fix crash when don't have permission"
+            ext.betaDistributionEmails="ducva@gmo-media.jp, ducva2410@gmail.com"
+        }
     }
 }
 
@@ -24,10 +45,10 @@ dependencies {
     androidTestCompile('com.android.support.test.espresso:espresso-core:2.2.2', {
         exclude group: 'com.android.support', module: 'support-annotations'
     })
-    compile 'com.android.support:appcompat-v7:25.1.0'
-    compile 'com.android.support:support-core-utils:25.1.0'
-    compile 'com.android.support:support-v4:25.1.0'
-    compile "com.android.support:recyclerview-v7:25.1.0"
+    compile 'com.android.support:appcompat-v7:25.1.1'
+    compile 'com.android.support:support-core-utils:25.1.1'
+    compile 'com.android.support:support-v4:25.1.1'
+    compile "com.android.support:recyclerview-v7:25.1.1"
     compile 'com.jakewharton:butterknife:8.5.1'
     annotationProcessor 'com.jakewharton:butterknife-compiler:8.5.1'
     testCompile 'junit:junit:4.12'
@@ -42,4 +63,7 @@ dependencies {
     compile 'com.squareup.picasso:picasso:2.5.2'
     //Universal Image Loader
     compile 'com.nostra13.universalimageloader:universal-image-loader:1.9.5'
+    compile('com.crashlytics.sdk.android:crashlytics:2.6.6@aar') {
+        transitive = true;
+    }
 }
