@@ -87,15 +87,6 @@ pipeline {
                 }
             }
         }
-        
-        stage("Quality Gate") {
-            steps {
-                script {
-                    getQualityGate()
-                }
-            }
-        }
-        // No need to occupy a node
      
     }
     post {
