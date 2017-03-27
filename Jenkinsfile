@@ -64,11 +64,11 @@ pipeline {
             }
         }
 
-        stage('Stage Upload To Fabric') {
-            steps {
-                sh "./gradlew crashlyticsUploadDistributionDebug -PBUILD_NUMBER=${env.BUILD_NUMBER}"
-            }
-        }
+        //stage('Stage Upload To Fabric') {
+        //    steps {
+        //        sh "./gradlew crashlyticsUploadDistributionDebug -PBUILD_NUMBER=${env.BUILD_NUMBER}"
+        //    }
+        //}
         
         stage('SonarQube analysis') {
             steps {
