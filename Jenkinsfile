@@ -72,12 +72,12 @@ pipeline {
         
         stage('SonarQube analysis') {
             steps {
+                def scannerHome = tool 'SonarQube Scanner 2.8';
                 withSonarQubeEnv('Sonar') {
                     // requires SonarQube Scanner for Gradle 2.1+
                     // It's important to add --info because of SONARJNKNS-281
-                    //sh "${scannerHome}/bin/sonar-scanner"
+                    sh "${scannerHome}/bin/sonar-scanner"
                     //sh './gradlew --info sonarqube'
-                    sh 'sonar-scanner'
                 }
             }
         }
