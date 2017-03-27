@@ -9,10 +9,6 @@ pipeline {
               steps {
                 // send build started notifications
                 sendNotifications 'STARTED'
-                script {
-                    def changeLog = getChangelog()
-                    echo "My branch is: ${changeLog}"
-                }
               }
         }
 
@@ -38,6 +34,10 @@ pipeline {
             steps {
                 //branch name from Jenkins environment variables
                 echo "My branch is: ${env.BRANCH_NAME}"
+                script {
+                    def changeLog = getChangelog()
+                    echo "Change logs: ${changeLog}"
+                }
 
                 //build your gradle flavor, passes the current build number as a parameter to gradle
                 sh "./gradlew clean assemble -PBUILD_NUMBER=${env.BUILD_NUMBER}"
