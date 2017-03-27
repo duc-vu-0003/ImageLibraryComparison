@@ -10,7 +10,7 @@ pipeline {
                 // send build started notifications
                 sendNotifications 'STARTED'
                 script {
-                    def changeLog = getChangelog
+                    def changeLog = getChangelog()
                     echo "My branch is: ${changeLog}"
                 }
               }
@@ -91,7 +91,7 @@ pipeline {
         stage("Quality Gate") {
             steps {
                 script {
-                    getQualityGate
+                    getQualityGate()
                 }
             }
         }
