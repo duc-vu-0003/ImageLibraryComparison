@@ -9,6 +9,10 @@ pipeline {
               steps {
                 // send build started notifications
                 sendNotifications 'STARTED'
+                script {
+                    def changeLog = getChangelog
+                    echo "My branch is: ${changeLog}"
+                }
               }
         }
 
@@ -84,6 +88,11 @@ pipeline {
             }
         }
         
+        stage("Quality Gate") {
+            script {
+                getQualityGate
+            }
+        }
         // No need to occupy a node
      
     }
