@@ -72,7 +72,7 @@ pipeline {
         
         stage('SonarQube analysis') {
             steps {
-                withSonarQubeEnv('SonarQube Scanner') {
+                withSonarQubeEnv('Sonar') {
                     // requires SonarQube Scanner for Gradle 2.1+
                     // It's important to add --info because of SONARJNKNS-281
                     sh './gradlew --info sonarqube'
