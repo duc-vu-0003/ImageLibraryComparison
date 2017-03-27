@@ -69,6 +69,24 @@ pipeline {
                 sh "./gradlew crashlyticsUploadDistributionDebug -PBUILD_NUMBER=${env.BUILD_NUMBER}"
             }
         }
+        
+        stage('SonarQube analysis') {
+            withSonarQubeEnv('My SonarQube Server') {
+                // requires SonarQube Scanner for Gradle 2.1+
+                // It's important to add --info because of SONARJNKNS-281
+                sh './gradlew --info sonarqube'
+            }
+        }
+        
+        // No need to occupy a node
+        stage("Quality Gate"){
+            timeout(time: 1, unit: 'HOURS') { // Just in case something goes wrong, pipeline will be killed after a timeout
+                def qg = waitForQualityGate() // Reuse taskId previously collected by withSonarQubeEnv
+                if (qg.status != 'OK') {
+                    error "Pipeline aborted due to quality gate failure: ${qg.status}"
+                }
+            }
+        }
     }
     post {
         always {
