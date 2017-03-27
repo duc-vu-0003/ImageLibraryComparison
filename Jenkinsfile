@@ -89,8 +89,10 @@ pipeline {
         }
         
         stage("Quality Gate") {
-            script {
-                getQualityGate
+            steps {
+                script {
+                    getQualityGate
+                }
             }
         }
         // No need to occupy a node
