@@ -1,9 +1,11 @@
-package con.ducva.imageloadercompare;
+package con.ducva.imageloadercompare.utils;
 
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 
 import java.util.Locale;
+
+import con.ducva.imageloadercompare.ScreenHelper;
 
 /**
  * Created by HAL Team on 2/5/17.
