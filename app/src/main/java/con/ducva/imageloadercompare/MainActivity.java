@@ -1,12 +1,13 @@
 package con.ducva.imageloadercompare;
 
+import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Debug;
 import android.provider.MediaStore;
+import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.Menu;
@@ -17,19 +18,20 @@ import android.widget.AdapterView;
 import android.widget.Spinner;
 import android.widget.TextView;
 
-import com.facebook.common.logging.FLog;
-
 import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import con.ducva.imageloadercompare.adapter.BaseAdapter;
+import con.ducva.imageloadercompare.utils.PermissionUtil;
+import con.ducva.imageloadercompare.utils.Utils;
 import con.ducva.imageloadercompare.view.PreCachingLayoutManager;
 
 public class MainActivity extends AppCompatActivity {
 
     private static final int DEFAULT_MESSAGE_SIZE = 1024;
+    public static final int PERMISSION_REQUEST_CODE = 3939;
 
     @BindView(R.id.loader_select)
     Spinner spLibrary;
@@ -90,6 +92,11 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void loadLocalUrls() {
+        String permissionString = "Our app need write storage permission to make handle picture purpose!";
+        if (!PermissionUtil.checkPermission(this, android.Manifest.permission.WRITE_EXTERNAL_STORAGE, permissionString, PERMISSION_REQUEST_CODE)) {
+            return;
+        }
+
         Uri externalContentUri = MediaStore.Images.Media.EXTERNAL_CONTENT_URI;
         String[] projection = {MediaStore.Images.Media._ID};
         Cursor cursor = null;
@@ -182,5 +189,16 @@ public class MainActivity extends AppCompatActivity {
         }
         handlerLibraryChange(currentLib);
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        if (requestCode == PERMISSION_REQUEST_CODE) {
+            if (grantResults.length > 0
+                    && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                loadLocalUrls();
+            }
+        }
     }
 }

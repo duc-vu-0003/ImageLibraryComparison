@@ -2,12 +2,14 @@ package con.ducva.imageloadercompare;
 
 import android.app.Application;
 
+import com.crashlytics.android.Crashlytics;
 import com.facebook.drawee.backends.pipeline.Fresco;
 import com.facebook.imagepipeline.core.ImagePipelineConfig;
 import com.nostra13.universalimageloader.cache.disc.naming.Md5FileNameGenerator;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
 import com.nostra13.universalimageloader.core.assist.QueueProcessingType;
+import io.fabric.sdk.android.Fabric;
 
 /**
  * Created by HAL Team on 2/5/17.
@@ -28,6 +30,7 @@ public class MyApplication extends Application {
     @Override
     public void onCreate() {
         super.onCreate();
+        Fabric.with(this, new Crashlytics());
         ImagePipelineConfig imagePipelineConfig = ImagePipelineConfig.newBuilder(this)
                 .setDownsampleEnabled(true)
                 .build();
